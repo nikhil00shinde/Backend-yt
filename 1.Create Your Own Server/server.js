@@ -44,12 +44,22 @@ const server = http.createServer((req, res) => {
 	switch (req.url) {
 		case "/":
 			path += "/index.html";
+			res.statusCode = 200;
 			break;
 		case "/about":
 			path += "/about.html";
+			res.statusCode = 200;
+			break;
+		case "/about-me":
+			// Redirect karna hain page ko from about-me to about permanently
+			// jo url likhenge browser pe "/about-me" route ke sath woh change to "/about" route
+			res.setHeader("Location", "/about");
+			res.statusCode = 301;
+			res.end();
 			break;
 		default:
 			path += "/404.html";
+			res.statusCode = 404;
 			break;
 	}
 
