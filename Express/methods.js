@@ -8,10 +8,24 @@ const app = express();
 app.use(express.json());
 app.listen(3000);
 
-let users = {};
-
+let users = [
+	{
+		id: 1,
+		name: "nikhil",
+	},
+	{
+		id: 2,
+		name: "madara",
+	},
+	{
+		id: 3,
+		name: "pain",
+	},
+];
 // get
 app.get("/user", (req, res) => {
+	// queries -> for filtering out purpose ke use karte hain
+	console.log(req.query);
 	res.send(users);
 });
 
@@ -46,4 +60,11 @@ app.delete("/user", (req, res) => {
 	res.json({
 		message: "data has been deleted",
 	});
+});
+
+// params -> jo route hain usko information deke taki voh database se us information ke according data response kare
+app.get("/user/:userName", (req, res) => {
+	console.log(req.params.userName);
+	console.log(req.params);
+	res.send("user id received");
 });
