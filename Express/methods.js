@@ -8,40 +8,52 @@ const app = express();
 app.use(express.json());
 app.listen(3000);
 
-let users = [
-	{
+let users = {
+	0: {
 		id: 1,
 		name: "nikhil",
 	},
-	{
+	1: {
 		id: 2,
 		name: "madara",
 	},
-	{
+	2: {
 		id: 3,
 		name: "pain",
 	},
-];
-// get
-app.get("/user", (req, res) => {
+};
+
+// pehle humhe mini app banana hoga
+const userRouter = express.Router(); // route banane ke liye
+// humhe base url set karna hoga hamare mini app ke liye
+//base url,router to use
+app.use("/user", userRouter); // jo route banaya uska base "/user" hain
+
+userRouter
+	.route("/") //final route
+	.get(getUser)
+	.post(postUser)
+	.patch(updateUser)
+	.delete(deleteUser);
+
+userRouter.route("/:id").get(getUserById);
+
+function getUser(req, res) {
 	// queries -> for filtering out purpose ke use karte hain
 	console.log(req.query);
 	res.send(users);
-});
+}
 
-// post -> to send data from frontend to backend
-// frontend se jo data aata hain voh hamesha request ki body ke andhar hota hain
-app.post("/user", (req, res) => {
+function postUser(req, res) {
 	console.log(req.body);
 	users = req.body;
 	res.json({
 		message: "data received successfully",
 		user: req.body,
 	});
-});
+}
 
-// update -> patch
-app.patch("/user", (req, res) => {
+function updateUser(req, res) {
 	console.log({ a: req.body });
 
 	// update data in users object
@@ -51,20 +63,20 @@ app.patch("/user", (req, res) => {
 	}
 	res.json({
 		message: "data updated successfully",
+		users,
 	});
-});
+}
 
-// to delete a data
-app.delete("/user", (req, res) => {
+function deleteUser(req, res) {
 	users = {};
 	res.json({
 		message: "data has been deleted",
 	});
-});
+}
 
-// params -> jo route hain usko information deke taki voh database se us information ke according data response kare
-app.get("/user/:userName", (req, res) => {
-	console.log(req.params.userName);
+function getUserById(req, res) {
+	console.log(req.params.id);
 	console.log(req.params);
-	res.send("user id received");
-});
+	console.log();
+	res.send({ message: "user id received", data: users[req.params.id] });
+}
