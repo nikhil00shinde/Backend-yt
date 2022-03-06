@@ -1,5 +1,5 @@
 {
-  "name": "Express",
+  "name": "MongoDB",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
@@ -10,8 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.0.0",
     "express": "^4.17.3",
-    "lodash": "^4.17.21",
     "mongoose": "^6.2.4"
   }
 }
