@@ -1,5 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const emailValidator = require("email-validator");
+
 require("dotenv").config();
 
 const app = express();
@@ -136,6 +138,9 @@ const userSchema = mongoose.Schema({
 		type: String,
 		required: true,
 		unique: true,
+		validate: function () {
+			return emailValidator.validate(this.email);
+		},
 	},
 	password: {
 		type: String,
@@ -146,8 +151,30 @@ const userSchema = mongoose.Schema({
 		type: String,
 		required: true,
 		minLength: 8,
+		validate: function () {
+			return this.confirmPassword === this.password;
+		},
 	},
 });
+
+// hooks -> iske through hum kuch kaam kar sakte pehle database mei save karne se pehle(PRE) and database ke save ke baad(POST)
+//remove - explore on own
+
+userSchema.pre("save", function () {
+	this.confirmPassword = undefined;
+	// undefined wali cheej save nhi hogi
+});
+
+// pre post hooks
+// before save event occurs in db
+// userSchema.pre("save", function () {
+// 	console.log("before saving in db", this);
+// });
+
+// // after save event occurs in db
+// userSchema.post("save", function (doc) {
+// 	console.log("after saving in db", doc);
+// });
 
 // models
 const userModel = mongoose.model("userModel", userSchema);
