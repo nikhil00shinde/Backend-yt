@@ -35,16 +35,22 @@ authRouter
 
 userRouter
 	.route("/")
-	.get(getUser)
+	.get(getUsers)
 	.post(postUser)
 	.patch(updateUser)
 	.delete(deleteUser);
 
 userRouter.route("/:id").get(getUserById);
 
-function getUser(req, res) {
-	console.log(req.query);
-	res.send(users);
+async function getUsers(req, res) {
+	// console.log(req.query);
+	// Read document
+	// let allUsers = await userModel.find();
+	let user = await userModel.findOne({ name: "Sarthak" });
+	res.json({
+		message: "list of all users",
+		data: user,
+	});
 }
 
 function postUser(req, res) {
@@ -55,30 +61,39 @@ function postUser(req, res) {
 	});
 }
 
-function updateUser(req, res) {
+async function updateUser(req, res) {
+	// Update
 	let dataToBeUpdated = req.body;
-
-	for (key in dataToBeUpdated) {
-		users[key] = dataToBeUpdated[key];
-	}
+	let user = await userModel.findOneAndUpdate(
+		{ email: "abcd@gmail.com" },
+		dataToBeUpdated
+	);
+	// for (key in dataToBeUpdated) {
+	// 	users[key] = dataToBeUpdated[key];
+	// }
 	res.json({
 		message: "data updated successfully",
-		users,
+		data: user,
 	});
 }
 
-function deleteUser(req, res) {
-	users = {};
+async function deleteUser(req, res) {
+	// users = {};
+	let dataToBeDeleted = req.body;
+	let user = await userModel.findOneAndDelete(dataToBeDeleted);
 	res.json({
 		message: "data has been deleted",
+		data: user,
 	});
 }
 
-function postSignUp(req, res) {
-	let obj = req.body;
+async function postSignUp(req, res) {
+	// Create document in Database
+	let dataObj = req.body;
+	let user = await userModel.create(dataObj);
 	res.json({
 		message: "user signed up",
-		data: obj,
+		data: user,
 	});
 }
 
@@ -137,13 +152,13 @@ const userSchema = mongoose.Schema({
 // models
 const userModel = mongoose.model("userModel", userSchema);
 
-(async function createUser() {
-	let user = {
-		name: "Sarthak",
-		email: "abcd@gmail.com",
-		password: "12345678",
-		confirmPassword: "12345678",
-	};
-	let data = await userModel.create(user);
-	console.log(data);
-})(); // immediately invoked function
+// (async function createUser() {
+// 	let user = {
+// 		name: "Sarthak",
+// 		email: "abcd@gmail.com",
+// 		password: "12345678",
+// 		confirmPassword: "12345678",
+// 	};
+// 	let data = await userModel.create(user);
+// 	console.log(data);
+// })(); // immediately invoked function
