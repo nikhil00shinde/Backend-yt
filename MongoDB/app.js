@@ -1,9 +1,11 @@
 const express = require("express");
+const cookieParser = require("cookie-parser");
 const userModel = require("./models/userModel");
 const app = express();
 
 app.listen(3000);
 app.use(express.json());
+app.use(cookieParser()); //access cookie in req/res object/or anymwhere in app
 
 let users = {
 	0: {
@@ -37,6 +39,9 @@ userRouter
 	.post(postUser)
 	.patch(updateUser)
 	.delete(deleteUser);
+
+userRouter.route("/getCookies").get(getCookies);
+userRouter.route("/setCookies").get(setCookies);
 
 userRouter.route("/:id").get(getUserById);
 
@@ -111,4 +116,22 @@ function getSignUp(req, res, next) {
 function middleware2(req, res, next) {
 	console.log("middleware2 encountered");
 	res.sendFile("D:/Old pc data/d/web-d/8.Backend/Express/SignUp/index.html");
+}
+
+// cookies
+function setCookies(req, res) {
+	// res.setHeader("Set-Cookie", "isLoggedIn=true");
+	res.cookie("isLoggedIn", false, {
+		maxAge: 1000 * 60 * 60 * 24,
+		secure: true,
+		httpOnly: true,
+	});
+	res.cookie("isPrimeMember", true);
+	res.send("cookie has been set");
+}
+
+function getCookies(req, res) {
+	let cookies = req.cookies;
+	console.log(cookies);
+	res.send("cookies recieved");
 }
