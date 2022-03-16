@@ -52,11 +52,11 @@ userSchema.pre("save", function () {
 	// undefined wali cheej save nhi hogi
 });
 
-userSchema.pre("save", async function () {
-	let salt = await bcrypt.genSalt();
-	let hashedString = await bcrypt.hash(this.password, salt);
-	this.password = hashedString;
-});
+// userSchema.pre("save", async function () {
+// 	let salt = await bcrypt.genSalt();
+// 	let hashedString = await bcrypt.hash(this.password, salt);
+// 	this.password = hashedString;
+// });
 
 // pre post hooks
 // before save event occurs in db
