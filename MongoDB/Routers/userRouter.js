@@ -1,10 +1,11 @@
 const express = require("express");
 const userRouter = express.Router();
 const userModel = require("../models/userModel");
+const protectRoute = require("./authHelper");
 
 userRouter
 	.route("/")
-	.get(getUsers)
+	.get(protectRoute, getUsers)
 	.post(postUser)
 	.patch(updateUser)
 	.delete(deleteUser);
@@ -17,11 +18,11 @@ userRouter.route("/:id").get(getUserById);
 async function getUsers(req, res) {
 	// console.log(req.query);
 	// Read document
-	// let allUsers = await userModel.find();
-	let user = await userModel.findOne({ name: "Sarthak" });
+	let allUsers = await userModel.find();
+	// let user = await userModel.findOne({ name: "Sarthak" });
 	res.json({
 		message: "list of all users",
-		data: user,
+		data: allUsers,
 	});
 }
 
